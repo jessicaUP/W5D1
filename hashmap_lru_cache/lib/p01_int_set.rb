@@ -1,3 +1,5 @@
+require 'byebug'
+
 class MaxIntSet
 
   attr_accessor :store
@@ -9,7 +11,7 @@ class MaxIntSet
   end
 
   def insert(num)
-    raise 'Out of bounds' if num > @max || num < 0
+    raise 'Out of bounds' if !is_valid?(num)
     @store[num] = true
   end
 
@@ -24,6 +26,7 @@ class MaxIntSet
   private
 
   def is_valid?(num)
+    (num <= @max && num > 0)
   end
 
   def validate!(num)
@@ -32,23 +35,37 @@ end
 
 
 class IntSet
+
+  attr_reader :store
+
   def initialize(num_buckets = 20)
     @store = Array.new(num_buckets) { Array.new }
   end
 
   def insert(num)
+    self[num] << num
   end
 
   def remove(num)
+    if self.include?(num)
+      bucket = self[num]
+      i = bucket.index(num)
+      return bucket.delete_at(i)
+    end
   end
 
   def include?(num)
+    bucket = self[num] 
+    bucket.each { |ele| return true if ele == num }
+    false
   end
 
   private
 
   def [](num)
-    # optional but useful; return the bucket corresponding to `num`
+    # optional but useful; return the bucket corresponding to `num` 
+    bucket_idx = num % num_buckets
+    @store[bucket_idx]
   end
 
   def num_buckets
