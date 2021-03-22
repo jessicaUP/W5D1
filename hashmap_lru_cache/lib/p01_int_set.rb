@@ -116,8 +116,8 @@ class ResizingIntSet
 
   def resize!
     nums = @store.flatten
-    @store = Array.new(num_buckets*2) { Array.new }
+    @store = Array.new(num_buckets*2) { Array.new } # O(1)
     @count = 0
-    nums.each { |num| self.insert(num) }
+    nums.each { |num| self.insert(num) } # O(n)
   end
 end
